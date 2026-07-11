@@ -107,7 +107,41 @@ body {
 /* show page */
 
 .show-img {
-    height: 30vh;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 1rem !important;
+}
+
+#listingCarousel {
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+#listingCarousel .carousel-control-prev,
+#listingCarousel .carousel-control-next {
+    width: 40px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0 1rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+#listingCarousel:hover .carousel-control-prev,
+#listingCarousel:hover .carousel-control-next {
+    opacity: 1;
+}
+
+#listingCarousel .carousel-control-prev-icon,
+#listingCarousel .carousel-control-next-icon {
+    filter: invert(100%);
+    width: 14px;
+    height: 14px;
 }
 
 .btns{
