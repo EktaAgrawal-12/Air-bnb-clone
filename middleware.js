@@ -22,13 +22,22 @@ module.exports.saveRedirectUrl = (req, res, next) => {
 
 module.exports.isOwner = async (req, res, next) => {
   let { id } = req.params;
-  let listing = await Listing.findById(id);
+  let listing = await Listing.findById(id).populate("owner");
 
-  if (!listing.owner.equals(res.locals.currUser._id)) {
-    req.flash("error", "You are not the owner of this listing");
-    return res.redirect(`/listings/${id}`);
+  if (res.locals.currUser) {
+    if (res.locals.currUser.role === "admin") {
+      return next();
+    }
+    if (listing.owner && listing.owner._id.equals(res.locals.currUser._id)) {
+      return next();
+    }
+    if (listing.owner && listing.owner.username === "admin") {
+      return next();
+    }
   }
-  next();
+
+  req.flash("error", "You are not the owner of this listing");
+  return res.redirect(`/listings/${id}`);
 };
 
 module.exports.validateListing = (req, res, next) => {
@@ -52,12 +61,25 @@ module.exports.validateReview = (req, res, next) => {
 }
 
 module.exports.isReviewAuthor = async (req, res, next) => {
-  let {id, reviewId } = req.params;
+  let { id, reviewId } = req.params;
   let review = await Review.findById(reviewId);
+  let listing = await Listing.findById(id);
 
-  if (!review.author.equals(res.locals.currUser._id)) {
-    req.flash("error", "You are not the author of this review");
+  if (res.locals.currUser && res.locals.currUser.role === "admin") {
+    return next();
+  }
+
+  if (!review.author.equals(res.locals.currUser._id) && !listing.owner.equals(res.locals.currUser._id)) {
+    req.flash("error", "You are not authorized to delete this review");
     return res.redirect(`/listings/${id}`);
   }
   next();
+};
+
+module.exports.isAdmin = (req, res, next) => {
+  if (req.isAuthenticated() && req.user.role === "admin") {
+    return next();
+  }
+  req.flash("error", "Access Denied: Admin privileges required!");
+  res.redirect("/listings");
 };

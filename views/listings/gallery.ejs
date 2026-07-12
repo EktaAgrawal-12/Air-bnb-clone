@@ -1,0 +1,32 @@
+<% layout("/layouts/boilerplate") %>
+<div class="container mt-4 mb-5">
+  <div class="d-flex align-items-center mb-4">
+    <a href="/listings/<%= listing._id %>" class="btn btn-outline-dark me-3 rounded-pill px-3">
+      <i class="fa-solid fa-arrow-left"></i> Back to Listing
+    </a>
+    <h2 class="mb-0">Photo Gallery</h2>
+  </div>
+  <p class="text-muted"><%= listing.title %> &mdash; <%= listing.location %>, <%= listing.country %></p>
+  <hr>
+
+  <div class="row g-4 mt-2">
+    <% if (listing.images && listing.images.length > 0) { %>
+      <% listing.images.forEach((img, idx) => { %>
+        <div class="col-12 col-md-4 col-sm-6">
+          <div class="card border-0 shadow-sm overflow-hidden h-100 listing-card" style="border-radius: var(--border-radius-md) !important;">
+            <a href="<%= img.url %>" target="_blank" title="Click to view full screen">
+              <img src="<%= img.url %>" class="card-img-top w-100" style="height: 250px; object-fit: cover;" alt="gallery_image_<%= idx %>" />
+            </a>
+          </div>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <div class="col-12 col-md-6 offset-md-3 text-center my-4">
+        <div class="card border-0 shadow-sm overflow-hidden listing-card" style="border-radius: var(--border-radius-md) !important;">
+          <img src="<%= listing.image && listing.image.url ? listing.image.url : 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60' %>" class="card-img-top w-100" style="height: 350px; object-fit: cover;" alt="gallery_image" />
+        </div>
+        <p class="text-muted mt-3">Only one image available for this listing.</p>
+      </div>
+    <% } %>
+  </div>
+</div>

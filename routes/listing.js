@@ -13,17 +13,20 @@ router
 .route("/")
 .get(wrapAsync(listingController.index))
 .post(isLoggedIn, 
-  upload.single('listing[image]'),
+  upload.array('listing[images]', 6),
   validateListing, 
   wrapAsync(listingController.createListing));
 
 //New Route
 router.get("/new", isLoggedIn, listingController.renderNewForm);
 
+//Gallery Route
+router.get("/:id/gallery", wrapAsync(listingController.showGallery));
+
 router
 .route("/:id")
 .get(wrapAsync(listingController.showListing))
-.put(isLoggedIn, isOwner, upload.single('listing[image]'), validateListing, wrapAsync(listingController.updateListing))
+.put(isLoggedIn, isOwner, upload.array('listing[images]', 6), validateListing, wrapAsync(listingController.updateListing))
 .delete(isLoggedIn, isOwner, wrapAsync(listingController.destroylisting));
 
 //Edit Route

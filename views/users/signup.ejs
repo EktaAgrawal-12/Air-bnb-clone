@@ -1,26 +1,56 @@
 <% layout("/layouts/boilerplate") %>
 
- <div class="row mt-3">
-    <h1 class="col-6 offset-3">SignUp on Wanderlust</h1>
-  <div class="col-6 offset-3">
-    <form action="/signup" method="POST" novalidate class="needs-validation">
-        <div class="mb-3">
-        <label for="username" class="form-lable">Username</label>
-        <input name="username" id="username" type="text" class="form-control" required/>
+ <div class="row mt-4">
+   <div class="col-12 col-md-6 offset-md-3">
+     <div class="card p-4 shadow-sm border rounded">
+       <h2 class="mb-4">Sign Up on Wanderlust</h2>
+       <form action="/signup" method="POST" novalidate class="needs-validation">
+         <div class="mb-3">
+           <label for="username" class="form-label font-weight-bold">Username</label>
+           <input name="username" id="username" type="text" class="form-control" placeholder="Enter your username" required/>
+           <div class="invalid-feedback">Please choose a username.</div>
+         </div>
+       
+         <div class="mb-3">
+           <label for="email" class="form-label font-weight-bold">Email</label>
+           <input name="email" id="email" type="email" class="form-control" placeholder="name@example.com" required/>
+           <div class="invalid-feedback">Please enter a valid email.</div>
+         </div>
+       
+         <div class="mb-3">
+           <label for="password" class="form-label font-weight-bold">Password</label>
+           <input name="password" id="password" type="password" class="form-control" placeholder="Enter your password" required/>
+           <div class="invalid-feedback">Please enter a password.</div>
+         </div>
 
-        <div class="valid-feedback">Looks good!</div>
-      </div>
-    
-        <div class="mb-3">
-        <label for="email" class="form-lable">Email</label>
-        <input name="email" id="email" type="email" class="form-control" required/>
-      </div>
-    
-        <div class="mb-3">
-        <label for="password" class="form-lable">Password</label>
-        <input name="password" id="password" type="password" class="form-control" required/>
-      </div>
-      <button class="btn btn-success">SignUp</button>
-    </form>
-    </div>
-    </div>
+         <div class="mb-3">
+           <label for="role" class="form-label font-weight-bold">Register As</label>
+           <select name="role" id="role" class="form-select" required>
+             <option value="user" selected>Guest (Standard User)</option>
+             <option value="admin">Host / Administrator</option>
+           </select>
+         </div>
+
+         <div class="mb-3 d-none" id="adminSecretField">
+           <label for="adminSecret" class="form-label font-weight-bold">Admin Secret Key</label>
+           <input name="adminSecret" id="adminSecret" type="password" class="form-control" placeholder="Enter admin code to verify"/>
+           <div class="form-text text-muted">For testing admin capabilities, enter <b>ADMIN123</b>.</div>
+         </div>
+
+         <button class="btn btn-primary-action w-100 py-2 mt-2">Sign Up</button>
+       </form>
+     </div>
+   </div>
+ </div>
+
+<script>
+  document.getElementById("role").addEventListener("change", (e) => {
+    const adminField = document.getElementById("adminSecretField");
+    if (e.target.value === "admin") {
+      adminField.classList.remove("d-none");
+    } else {
+      adminField.classList.add("d-none");
+      document.getElementById("adminSecret").value = "";
+    }
+  });
+</script>

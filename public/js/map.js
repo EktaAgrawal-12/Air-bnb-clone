@@ -1,3 +1,6 @@
+const mapElement = document.getElementById('map');
+const listing = JSON.parse(mapElement.dataset.listing);
+
 if (listing.geometry && listing.geometry.coordinates 
     && listing.geometry.coordinates[0] !== 0) {
   

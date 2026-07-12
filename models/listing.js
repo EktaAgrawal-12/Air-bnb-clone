@@ -8,6 +8,12 @@ const listingSchema = new Schema({
     required: true,
   },
   description: String,
+  category: {
+    type: String,
+    enum: ["trending", "rooms", "cities", "mountains", "castles", "pools", "camping", "farms", "arctic", "domes", "boats"],
+    default: "rooms",
+    required: true
+  },
   image: {
     url: String,
     filename: String,
@@ -25,6 +31,12 @@ const listingSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "User"
   },
+  images: [
+    {
+      url: String,
+      filename: String,
+    }
+  ],
 
   geometry: {
     type: {

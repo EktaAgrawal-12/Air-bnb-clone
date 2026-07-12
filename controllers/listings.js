@@ -17,8 +17,24 @@ async function geocodeLocation(location) {
 }
 
 module.exports.index = async (req, res) => {
-  const allListings = await Listing.find({});
-  res.render("listings/index.ejs", { allListings });
+  let { q, category } = req.query;
+  let allListings;
+  let filter = {};
+
+  if (q) {
+    filter.$or = [
+      { title: { $regex: q, $options: "i" } },
+      { location: { $regex: q, $options: "i" } },
+      { country: { $regex: q, $options: "i" } }
+    ];
+  }
+
+  if (category) {
+    filter.category = category;
+  }
+
+  allListings = await Listing.find(filter);
+  res.render("listings/index.ejs", { allListings, activeCategory: category || "" });
 };
 
 module.exports.renderNewForm = (req, res) => {
@@ -43,11 +59,16 @@ module.exports.showListing = async (req, res) => {
 };
 
 module.exports.createListing = async (req, res, next) => {
-    let url = req.file.path || req.file.url || req.file.secure_url;
-    let filename = req.file.filename || req.file.public_id;
     const newListing = new Listing(req.body.listing);
     newListing.owner = req.user._id;
-    newListing.image = {url, filename}
+
+    if (req.files && req.files.length > 0) {
+      newListing.images = req.files.map(f => ({
+        url: f.path || f.url || f.secure_url,
+        filename: f.filename || f.public_id
+      }));
+      newListing.image = newListing.images[0];
+    }
 
     newListing.geometry = await geocodeLocation(req.body.listing.location);
 
@@ -78,10 +99,13 @@ module.exports.updateListing = async (req, res) => {
   let { id } = req.params;
   let listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
 
-  if(typeof req.file !== "undefined"){
-    let url = req.file.path || req.file.url || req.file.secure_url;
-    let filename = req.file.filename || req.file.public_id;
-    listing.image = {url, filename}
+  if (req.files && req.files.length > 0) {
+    const newImages = req.files.map(f => ({
+      url: f.path || f.url || f.secure_url,
+      filename: f.filename || f.public_id
+    }));
+    listing.images.push(...newImages);
+    listing.image = listing.images[0];
     await listing.save();
   }
 
@@ -95,4 +119,14 @@ module.exports.destroylisting = async (req, res) => {
   console.log(deletedListing);
   req.flash("success", "Listing Deleted");
   res.redirect("/listings");
+};
+
+module.exports.showGallery = async (req, res) => {
+  let { id } = req.params;
+  const listing = await Listing.findById(id);
+  if (!listing) {
+    req.flash("error", "Listing you requested for does not exist!");
+    return res.redirect("/listings");
+  }
+  res.render("listings/gallery.ejs", { listing });
 };
