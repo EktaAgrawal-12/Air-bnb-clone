@@ -1,56 +1,94 @@
 <% layout("/layouts/boilerplate") %>
 
- <div class="row mt-4">
-   <div class="col-12 col-md-6 offset-md-3">
-     <div class="card p-4 shadow-sm border rounded">
-       <h2 class="mb-4">Sign Up on Wanderlust</h2>
-       <form action="/signup" method="POST" novalidate class="needs-validation">
-         <div class="mb-3">
-           <label for="username" class="form-label font-weight-bold">Username</label>
-           <input name="username" id="username" type="text" class="form-control" placeholder="Enter your username" required/>
-           <div class="invalid-feedback">Please choose a username.</div>
-         </div>
-       
-         <div class="mb-3">
-           <label for="email" class="form-label font-weight-bold">Email</label>
-           <input name="email" id="email" type="email" class="form-control" placeholder="name@example.com" required/>
-           <div class="invalid-feedback">Please enter a valid email.</div>
-         </div>
-       
-         <div class="mb-3">
-           <label for="password" class="form-label font-weight-bold">Password</label>
-           <input name="password" id="password" type="password" class="form-control" placeholder="Enter your password" required/>
-           <div class="invalid-feedback">Please enter a password.</div>
-         </div>
+<div class="auth-page">
+  <!-- Flash Messages -->
+  <div style="position: fixed; top: 1.5rem; left: 50%; transform: translateX(-50%); z-index: 100; width: 90%; max-width: 500px;">
+    <% if (typeof success !== 'undefined' && success && success.length) { %>
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <%= success %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <% } %>
+    <% if (typeof error !== 'undefined' && error && error.length) { %>
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <%= error %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <% } %>
+  </div>
 
-         <div class="mb-3">
-           <label for="role" class="form-label font-weight-bold">Register As</label>
-           <select name="role" id="role" class="form-select" required>
-             <option value="user" selected>Guest (Standard User)</option>
-             <option value="admin">Host / Administrator</option>
-           </select>
-         </div>
+  <div class="glass-card" style="width: 100%; max-width: 460px;">
+    <!-- Role Badge -->
+    <div class="text-center">
+      <div class="role-badge">
+        <% if (role === 'host') { %>
+          <i class="fa-solid fa-house-chimney"></i> Signing up as Host
+        <% } else { %>
+          <i class="fa-solid fa-suitcase-rolling"></i> Signing up as Customer
+        <% } %>
+      </div>
+    </div>
 
-         <div class="mb-3 d-none" id="adminSecretField">
-           <label for="adminSecret" class="form-label font-weight-bold">Admin Secret Key</label>
-           <input name="adminSecret" id="adminSecret" type="password" class="form-control" placeholder="Enter admin code to verify"/>
-           <div class="form-text text-muted">For testing admin capabilities, enter <b>ADMIN123</b>.</div>
-         </div>
+    <h2 class="auth-title text-center">Create Account</h2>
+    <p class="auth-subtitle text-center">Fill in your details to get started</p>
 
-         <button class="btn btn-primary-action w-100 py-2 mt-2">Sign Up</button>
-       </form>
-     </div>
-   </div>
- </div>
+    <form action="/signup" method="POST" novalidate class="needs-validation">
+      <input type="hidden" name="role" value="<%= role %>"/>
+
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input name="username" id="username" type="text" class="form-control" placeholder="Choose a username" required/>
+        <div class="invalid-feedback">Please choose a username.</div>
+      </div>
+
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input name="email" id="email" type="email" class="form-control" placeholder="name@example.com" required/>
+        <div class="invalid-feedback">Please enter a valid email.</div>
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <div class="input-group">
+          <input name="password" id="password" type="password" class="form-control" placeholder="Create a strong password" required style="border-top-right-radius: 0; border-bottom-right-radius: 0;"/>
+          <button class="btn btn-outline-secondary toggle-password" type="button" data-target="password" style="border-top-left-radius: 0; border-bottom-left-radius: 0;">
+            <i class="fa-solid fa-eye"></i>
+          </button>
+          <div class="invalid-feedback">Please enter a password.</div>
+        </div>
+      </div>
+
+      <button class="btn btn-airbnb w-100 mt-2">Create Account</button>
+    </form>
+
+    <div class="text-center mt-3">
+      <a href="/signup" style="color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.9rem;">
+        <i class="fa-solid fa-arrow-left me-1"></i> Choose a different role
+      </a>
+    </div>
+    <div class="text-center mt-2">
+      <span style="color: rgba(255,255,255,0.5); font-size: 0.9rem;">Already have an account?</span>
+      <a href="/login" style="color: #fff; font-weight: 600; text-decoration: none; font-size: 0.9rem;"> Login</a>
+    </div>
+  </div>
+</div>
 
 <script>
-  document.getElementById("role").addEventListener("change", (e) => {
-    const adminField = document.getElementById("adminSecretField");
-    if (e.target.value === "admin") {
-      adminField.classList.remove("d-none");
-    } else {
-      adminField.classList.add("d-none");
-      document.getElementById("adminSecret").value = "";
-    }
+  document.querySelectorAll(".toggle-password").forEach(button => {
+    button.addEventListener("click", () => {
+      const targetId = button.getAttribute("data-target");
+      const targetInput = document.getElementById(targetId);
+      const icon = button.querySelector("i");
+      
+      if (targetInput.type === "password") {
+        targetInput.type = "text";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+      } else {
+        targetInput.type = "password";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+      }
+    });
   });
 </script>

@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <a class="navbar-brand" href="/listings">
       <i class="fa-regular fa-compass"></i>
-      <span>Wanderlust</span>
+      <span>Nestora</span>
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
       <span class="navbar-toggler-icon"></span>
@@ -25,7 +25,14 @@
             <i class="fa-solid fa-gauge"></i> <b>Admin Dashboard</b>
           </a>
         <% } %>
-        <a class="nav-link" href="/listings/new"><i class="fa-solid fa-plus text-primary-color"></i> Airbnb your home</a>
+        <% if(currUser && currUser.role === 'host') {%>
+          <a class="nav-link" href="/host/dashboard" style="color: #2196f3 !important;">
+            <i class="fa-solid fa-chart-line"></i> <b>Host Dashboard</b>
+          </a>
+        <% } %>
+        <% if (currUser && (currUser.role === 'host' || currUser.role === 'admin')) { %>
+          <a class="nav-link" href="/listings/new"><i class="fa-solid fa-plus text-primary-color"></i> Airbnb your home</a>
+        <% } %>
         <% if(!currUser) {%>
           <a class="nav-link" href="/signup"><b>Sign Up</b></a>
           <a class="nav-link" href="/login"><b>Login</b></a>
@@ -35,8 +42,10 @@
             Hi, <b><%= currUser.username %></b>
             <% if (currUser.role === 'admin') { %>
               <span class="badge bg-danger ms-1">Admin</span>
+            <% } else if (currUser.role === 'host') { %>
+              <span class="badge ms-1" style="background-color: #2196f3;">Host</span>
             <% } else { %>
-              <span class="badge bg-dark ms-1">User</span>
+              <span class="badge ms-1" style="background-color: #4caf50;">Customer</span>
             <% } %>
           </span>
           <a class="nav-link" href="/logout"><b>Logout</b></a>

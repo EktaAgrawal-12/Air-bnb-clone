@@ -22,18 +22,10 @@ module.exports.saveRedirectUrl = (req, res, next) => {
 
 module.exports.isOwner = async (req, res, next) => {
   let { id } = req.params;
-  let listing = await Listing.findById(id).populate("owner");
+  let listing = await Listing.findById(id);
 
-  if (res.locals.currUser) {
-    if (res.locals.currUser.role === "admin") {
-      return next();
-    }
-    if (listing.owner && listing.owner._id.equals(res.locals.currUser._id)) {
-      return next();
-    }
-    if (listing.owner && listing.owner.username === "admin") {
-      return next();
-    }
+  if (res.locals.currUser && (listing.owner.equals(res.locals.currUser._id) || res.locals.currUser.role === "admin")) {
+    return next();
   }
 
   req.flash("error", "You are not the owner of this listing");
@@ -65,21 +57,51 @@ module.exports.isReviewAuthor = async (req, res, next) => {
   let review = await Review.findById(reviewId);
   let listing = await Listing.findById(id);
 
-  if (res.locals.currUser && res.locals.currUser.role === "admin") {
-    return next();
+  if (res.locals.currUser) {
+    if (review.author.equals(res.locals.currUser._id) || listing.owner.equals(res.locals.currUser._id)) {
+      return next();
+    }
   }
 
-  if (!review.author.equals(res.locals.currUser._id) && !listing.owner.equals(res.locals.currUser._id)) {
-    req.flash("error", "You are not authorized to delete this review");
-    return res.redirect(`/listings/${id}`);
-  }
-  next();
+  req.flash("error", "You are not authorized to delete this review");
+  return res.redirect(`/listings/${id}`);
 };
 
 module.exports.isAdmin = (req, res, next) => {
-  if (req.isAuthenticated() && req.user.role === "admin") {
+  if (!req.isAuthenticated()) {
+    req.session.redirectUrl = req.originalUrl;
+    req.flash("error", "You must be logged in!");
+    return res.redirect("/login");
+  }
+  if (req.user.role === "admin") {
     return next();
   }
   req.flash("error", "Access Denied: Admin privileges required!");
+  res.redirect("/listings");
+};
+
+module.exports.isHost = (req, res, next) => {
+  if (!req.isAuthenticated()) {
+    req.session.redirectUrl = req.originalUrl;
+    req.flash("error", "You must be logged in!");
+    return res.redirect("/login");
+  }
+  if (req.user.role === "host") {
+    return next();
+  }
+  req.flash("error", "Access Denied: Host privileges required!");
+  res.redirect("/listings");
+};
+
+module.exports.isHostOrAdmin = (req, res, next) => {
+  if (!req.isAuthenticated()) {
+    req.session.redirectUrl = req.originalUrl;
+    req.flash("error", "You must be logged in!");
+    return res.redirect("/login");
+  }
+  if (req.user.role === "host" || req.user.role === "admin") {
+    return next();
+  }
+  req.flash("error", "Access Denied: Only hosts or admins can perform this action!");
   res.redirect("/listings");
 };

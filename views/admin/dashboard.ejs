@@ -1,0 +1,312 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="admin-page">
+  <div class="container">
+    <!-- Flash Messages -->
+    <% if (typeof success !== 'undefined' && success && success.length) { %>
+      <div class="alert alert-success alert-dismissible fade show" role="alert" style="background: rgba(76,175,80,0.2); border: 1px solid rgba(76,175,80,0.4); color: #fff; border-radius: 12px;">
+        <%= success %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <% } %>
+    <% if (typeof error !== 'undefined' && error && error.length) { %>
+      <div class="alert alert-danger alert-dismissible fade show" role="alert" style="background: rgba(255,82,82,0.2); border: 1px solid rgba(255,82,82,0.4); color: #fff; border-radius: 12px;">
+        <%= error %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <% } %>
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h2 style="font-weight: 800;"><i class="fa-solid fa-gauge me-2"></i> Admin Dashboard</h2>
+        <p style="color: rgba(255,255,255,0.5); margin: 0;">Welcome back, <strong><%= typeof currUser !== 'undefined' && currUser ? currUser.username : 'Admin' %></strong></p>
+      </div>
+      <a href="/listings" class="btn btn-glass btn-sm"><i class="fa-solid fa-arrow-left me-1"></i> Back to Site</a>
+    </div>
+
+    <!-- Overview Stat Cards -->
+    <div class="row mb-5 g-3">
+      <div class="col-6 col-lg-3">
+        <div class="admin-glass-stat purple" onclick="switchTab('hosts')">
+          <div>
+            <p class="stat-label mb-1">Total Users</p>
+            <h2 class="stat-value"><%= totalUsers %></h2>
+          </div>
+          <i class="fa-solid fa-users"></i>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="admin-glass-stat blue" onclick="switchTab('hosts')">
+          <div>
+            <p class="stat-label mb-1">Total Hosts</p>
+            <h2 class="stat-value"><%= totalHosts %></h2>
+          </div>
+          <i class="fa-solid fa-house-chimney"></i>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="admin-glass-stat green" onclick="switchTab('customers')">
+          <div>
+            <p class="stat-label mb-1">Total Customers</p>
+            <h2 class="stat-value"><%= totalCustomers %></h2>
+          </div>
+          <i class="fa-solid fa-suitcase-rolling"></i>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="admin-glass-stat coral" onclick="switchTab('listings')">
+          <div>
+            <p class="stat-label mb-1">Total Listings</p>
+            <h2 class="stat-value"><%= totalListings %></h2>
+          </div>
+          <i class="fa-solid fa-hotel"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="glass-tabs" id="admin-tabs">
+      <a class="glass-tab active" href="javascript:void(0)" data-tab="hosts" onclick="switchTab('hosts')">
+        <i class="fa-solid fa-house-chimney me-1"></i> All Hosts (<%= hosts.length %>)
+      </a>
+      <a class="glass-tab" href="javascript:void(0)" data-tab="customers" onclick="switchTab('customers')">
+        <i class="fa-solid fa-suitcase-rolling me-1"></i> All Customers (<%= customers.length %>)
+      </a>
+      <a class="glass-tab" href="javascript:void(0)" data-tab="listings" onclick="switchTab('listings')">
+        <i class="fa-solid fa-hotel me-1"></i> All Listings (<%= listings.length %>)
+      </a>
+    </div>
+
+    <!-- Hosts Table -->
+    <div id="tab-hosts" class="tab-content">
+      <div class="glass-table-wrapper">
+        <table class="table glass-table">
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Joined</th>
+              <th>Listings</th>
+              <th class="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (hosts.length === 0) { %>
+              <tr>
+                <td colspan="5" class="text-center py-4" style="opacity: 0.5;">No hosts registered yet.</td>
+              </tr>
+            <% } else { %>
+              <% hosts.forEach(host => { %>
+                <tr>
+                  <td><strong><%= host.username %></strong></td>
+                  <td><%= host.email %></td>
+                  <td><%= host._id.getTimestamp().toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' }) %></td>
+                  <td><span class="badge" style="background: rgba(255,255,255,0.15);"><%= host.listingCount %></span></td>
+                  <td class="text-center">
+                    <a href="/admin/users/<%= host._id %>" class="btn btn-glass btn-sm py-1 px-3" style="font-size: 0.8rem;">
+                      <i class="fa-solid fa-eye me-1"></i> View
+                    </a>
+                  </td>
+                </tr>
+              <% }) %>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Customers Table -->
+    <div id="tab-customers" class="tab-content" style="display: none;">
+      <div class="glass-table-wrapper">
+        <table class="table glass-table">
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Joined</th>
+              <th class="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (customers.length === 0) { %>
+              <tr>
+                <td colspan="4" class="text-center py-4" style="opacity: 0.5;">No customers registered yet.</td>
+              </tr>
+            <% } else { %>
+              <% customers.forEach(cust => { %>
+                <tr>
+                  <td><strong><%= cust.username %></strong></td>
+                  <td><%= cust.email %></td>
+                  <td><%= cust._id.getTimestamp().toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' }) %></td>
+                  <td class="text-center">
+                    <a href="/admin/users/<%= cust._id %>" class="btn btn-glass btn-sm py-1 px-3" style="font-size: 0.8rem;">
+                      <i class="fa-solid fa-eye me-1"></i> View
+                    </a>
+                  </td>
+                </tr>
+              <% }) %>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Listings Table -->
+    <div id="tab-listings" class="tab-content" style="display: none;">
+      <div class="glass-table-wrapper">
+        <table class="table glass-table">
+          <thead>
+            <tr>
+              <th>Property Title</th>
+              <th>Location</th>
+              <th>Price</th>
+              <th>Registered By</th>
+              <th class="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (listings.length === 0) { %>
+              <tr>
+                <td colspan="5" class="text-center py-4" style="opacity: 0.5;">No listings registered yet.</td>
+              </tr>
+            <% } else { %>
+              <% listings.forEach(list => { %>
+                <tr>
+                  <td><strong><%= list.title %></strong></td>
+                  <td><%= list.location %>, <%= list.country %></td>
+                  <td>&#8377; <%= list.price ? list.price.toLocaleString("en-IN") : "N/A" %> / night</td>
+                  <td>
+                    <% if (list.owner) { %>
+                      <strong><%= list.owner.username %></strong>
+                      <span class="badge ms-1 <%= list.owner.role === 'admin' ? 'bg-danger' : 'bg-primary' %>" style="font-size: 0.75rem;">
+                        <%= list.owner.role.toUpperCase() %>
+                      </span>
+                    <% } else { %>
+                      <span class="text-muted">Unknown</span>
+                    <% } %>
+                  </td>
+                  <td class="text-center">
+                    <div class="d-flex justify-content-center gap-2">
+                      <a href="/listings/<%= list._id %>" class="btn btn-glass btn-sm py-1 px-3" style="font-size: 0.8rem;">
+                        <i class="fa-solid fa-eye me-1"></i> View
+                      </a>
+                      <form id="delete-form-<%= list._id %>" method="POST" action="/listings/<%= list._id %>?_method=DELETE" class="d-inline">
+                        <button type="button" onclick="triggerDeleteListing('<%= list._id %>', '<%= list.title.replace(/'/g, '\\\'').replace(/"/g, '&quot;') %>', this)" class="btn btn-sm btn-outline-danger py-1 px-3" style="font-size: 0.8rem; border-radius: 8px;">
+                          <i class="fa-solid fa-trash-can me-1"></i> Delete
+                        </button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              <% }) %>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Custom Deletion Modal -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true" style="color: #222;">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius: 16px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.3); background: #fff;">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title" id="deleteConfirmModalLabel" style="font-weight: 800; font-size: 1.3rem;">Confirm Deletion</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="cancelDelete()"></button>
+      </div>
+      <div class="modal-body py-3">
+        <p class="mb-1" style="font-size: 1.05rem;">Are you sure you want to delete <strong id="deleteListingTitle">this listing</strong>?</p>
+        <p class="text-danger mb-0" style="font-weight: 600;">This action will execute automatically in <span id="deleteCountdown">5</span> seconds.</p>
+        <!-- Progress bar countdown -->
+        <div class="progress mt-3" style="height: 6px; background-color: #f0f0f0;">
+          <div id="deleteProgressBar" class="progress-bar bg-danger" role="progressbar" style="width: 100%; transition: width 1s linear;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+      </div>
+      <div class="modal-footer border-0 pt-0">
+        <button type="button" class="btn btn-secondary px-4 py-2" data-bs-dismiss="modal" onclick="cancelDelete()" style="border-radius: 8px; font-weight: 600;">Cancel</button>
+        <button type="button" class="btn btn-danger px-4 py-2" onclick="confirmDeleteNow()" style="border-radius: 8px; font-weight: 700; background-color: #FF385C; border: none;">Delete Now</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function switchTab(tabName) {
+    // Hide all tab contents
+    document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+    // Remove active from all tabs
+    document.querySelectorAll('.glass-tab').forEach(el => el.classList.remove('active'));
+    // Show selected tab
+    document.getElementById('tab-' + tabName).style.display = 'block';
+    // Activate the clicked tab
+    document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+  }
+
+  let deleteTimer = null;
+  let countdownVal = 5;
+  let activeDeleteForm = null;
+  let deleteModalInstance = null;
+
+  function triggerDeleteListing(listingId, listingTitle, buttonElement) {
+    activeDeleteForm = document.getElementById("delete-form-" + listingId);
+    
+    document.getElementById("deleteListingTitle").innerText = listingTitle;
+    document.getElementById("deleteCountdown").innerText = "5";
+    
+    countdownVal = 5;
+    const progressBar = document.getElementById("deleteProgressBar");
+    progressBar.style.transition = "none";
+    progressBar.style.width = "100%";
+    
+    const modalEl = document.getElementById("deleteConfirmModal");
+    if (!deleteModalInstance) {
+      deleteModalInstance = new bootstrap.Modal(modalEl, {
+        backdrop: 'static',
+        keyboard: false
+      });
+    }
+    deleteModalInstance.show();
+    
+    setTimeout(() => {
+      progressBar.style.transition = "width 5s linear";
+      progressBar.style.width = "0%";
+    }, 50);
+
+    deleteTimer = setInterval(() => {
+      countdownVal--;
+      document.getElementById("deleteCountdown").innerText = countdownVal;
+      if (countdownVal <= 0) {
+        clearInterval(deleteTimer);
+        submitDelete();
+      }
+    }, 1000);
+  }
+
+  function cancelDelete() {
+    if (deleteTimer) {
+      clearInterval(deleteTimer);
+      deleteTimer = null;
+    }
+    activeDeleteForm = null;
+  }
+
+  function confirmDeleteNow() {
+    if (deleteTimer) {
+      clearInterval(deleteTimer);
+      deleteTimer = null;
+    }
+    submitDelete();
+  }
+
+  function submitDelete() {
+    if (activeDeleteForm) {
+      activeDeleteForm.submit();
+    }
+    if (deleteModalInstance) {
+      deleteModalInstance.hide();
+    }
+  }
+</script>

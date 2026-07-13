@@ -1,6 +1,5 @@
 const cloudinary = require('cloudinary').v2;
-// const { CloudinaryStorage } = require('multer-storage-cloudinary');
-// ✅ Correct for v2
+
 const CloudinaryStorage = require('multer-storage-cloudinary');
 
 console.log(require('multer-storage-cloudinary'))
@@ -14,7 +13,7 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary: require('cloudinary'),
   params: {
-    folder: 'wanderlust_DEV',
+    folder: 'nestora_DEV',
     allowedFormats: ["png", "jpg", "jpeg"],
   },
 });

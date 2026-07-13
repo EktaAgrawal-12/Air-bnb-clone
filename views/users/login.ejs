@@ -1,27 +1,72 @@
 <% layout("/layouts/boilerplate") %>
 
- <div class="row mt-4 mb-5">
-   <div class="col-12 col-md-6 offset-md-3">
-     <div class="card p-4 shadow-sm border rounded">
-       <h2 class="mb-4">Login to Wanderlust</h2>
-       <form action="/login" method="POST" novalidate class="needs-validation">
-         <div class="mb-3">
-           <label for="username" class="form-label font-weight-bold">Username</label>
-           <input name="username" id="username" type="text" class="form-control" placeholder="Enter your username" required/>
-           <div class="invalid-feedback">Please enter your username.</div>
-         </div>
-       
-         <div class="mb-3">
-           <label for="password" class="form-label font-weight-bold">Password</label>
-           <input name="password" id="password" type="password" class="form-control" placeholder="Enter your password" required/>
-           <div class="invalid-feedback">Please enter your password.</div>
-         </div>
+<div class="auth-page">
+  <!-- Flash Messages -->
+  <div style="position: fixed; top: 1.5rem; left: 50%; transform: translateX(-50%); z-index: 100; width: 90%; max-width: 500px;">
+    <% if (typeof success !== 'undefined' && success && success.length) { %>
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <%= success %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <% } %>
+    <% if (typeof error !== 'undefined' && error && error.length) { %>
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <%= error %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <% } %>
+  </div>
 
-         <button class="btn btn-primary-action w-100 py-2 mt-2">Login</button>
-       </form>
-       <div class="text-center mt-3">
-         <span class="text-muted">New user? </span><a href="/signup" class="text-primary-color text-decoration-none">Sign up here</a>
-       </div>
-     </div>
-   </div>
- </div>
+  <div class="glass-card" style="width: 100%; max-width: 440px;">
+    <h2 class="auth-title text-center">Welcome Back</h2>
+    <p class="auth-subtitle text-center">Login to your Nestora account</p>
+
+    <form action="/login" method="POST" novalidate class="needs-validation">
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input name="username" id="username" type="text" class="form-control" placeholder="Enter your username" required/>
+        <div class="invalid-feedback">Please enter your username.</div>
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <div class="input-group">
+          <input name="password" id="password" type="password" class="form-control" placeholder="Enter your password" required style="border-top-right-radius: 0; border-bottom-right-radius: 0;"/>
+          <button class="btn btn-outline-secondary toggle-password" type="button" data-target="password" style="border-top-left-radius: 0; border-bottom-left-radius: 0;">
+            <i class="fa-solid fa-eye"></i>
+          </button>
+          <div class="invalid-feedback">Please enter your password.</div>
+        </div>
+      </div>
+
+      <button class="btn btn-airbnb w-100 mt-2">Login</button>
+    </form>
+
+    <div class="text-center mt-3">
+      <span style="color: rgba(255,255,255,0.5); font-size: 0.9rem;">New user?</span>
+      <a href="/signup" style="color: #fff; font-weight: 600; text-decoration: none; font-size: 0.9rem;"> Sign up here</a>
+      <span style="color: rgba(255,255,255,0.3); margin: 0 0.5rem;">|</span>
+      <a href="/forgot-password" style="color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.85rem;">Forgot password?</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll(".toggle-password").forEach(button => {
+    button.addEventListener("click", () => {
+      const targetId = button.getAttribute("data-target");
+      const targetInput = document.getElementById(targetId);
+      const icon = button.querySelector("i");
+      
+      if (targetInput.type === "password") {
+        targetInput.type = "text";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+      } else {
+        targetInput.type = "password";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+      }
+    });
+  });
+</script>

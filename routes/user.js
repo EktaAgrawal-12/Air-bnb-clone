@@ -1,11 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const User = require("../models/user.js");
 const wrapAsync = require("../utils/wrapAsync.js");
 const passport = require("passport");
-const { saveRedirectUrl, isAdmin } = require("../middleware.js");
+const { saveRedirectUrl } = require("../middleware.js");
 
-const userController = require("../controllers/users.js")
+const userController = require("../controllers/users.js");
 
 router
 .route("/signup")
@@ -20,6 +19,12 @@ router
 
 router.get("/logout", userController.logout);
 
-router.get("/admin/dashboard", isAdmin, wrapAsync(userController.dashboard));
+// Forgot Password routes
+router.get("/forgot-password", userController.renderForgotForm);
+router.post("/forgot-password", wrapAsync(userController.sendResetEmail));
+
+// Reset Password routes
+router.get("/reset-password/:token", wrapAsync(userController.renderResetForm));
+router.post("/reset-password/:token", wrapAsync(userController.updatePassword));
 
 module.exports = router;

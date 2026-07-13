@@ -1,0 +1,73 @@
+<% layout("/layouts/boilerplate") %>
+
+ <div class="row mt-4 mb-5">
+   <div class="col-12 col-md-6 offset-md-3">
+     <div class="card p-4 shadow-sm border rounded">
+       <h2 class="mb-3">Reset Password</h2>
+       <p class="text-muted small mb-4">Please choose a strong password to secure your account.</p>
+       
+       <form action="/reset-password/<%= token %>" method="POST" id="resetForm" novalidate class="needs-validation">
+         <div class="mb-3">
+           <label for="password" class="form-label font-weight-bold">New Password</label>
+           <div class="input-group">
+             <input name="password" id="password" type="password" class="form-control" placeholder="Enter new password" required minlength="6" style="border-top-right-radius: 0; border-bottom-right-radius: 0;"/>
+             <button class="btn btn-outline-secondary toggle-password" type="button" data-target="password" style="border-top-left-radius: 0; border-bottom-left-radius: 0; border-color: #ced4da;">
+               <i class="fa-solid fa-eye"></i>
+             </button>
+             <div class="invalid-feedback">Password must be at least 6 characters.</div>
+           </div>
+         </div>
+
+         <div class="mb-3">
+           <label for="confirmPassword" class="form-label font-weight-bold">Confirm New Password</label>
+           <div class="input-group">
+             <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm new password" required style="border-top-right-radius: 0; border-bottom-right-radius: 0;"/>
+             <button class="btn btn-outline-secondary toggle-password" type="button" data-target="confirmPassword" style="border-top-left-radius: 0; border-bottom-left-radius: 0; border-color: #ced4da;">
+               <i class="fa-solid fa-eye"></i>
+             </button>
+             <div class="invalid-feedback" id="confirmFeedback">Passwords must match.</div>
+           </div>
+         </div>
+
+         <button class="btn btn-primary-action w-100 py-2 mt-2">Reset Password</button>
+       </form>
+     </div>
+   </div>
+ </div>
+
+<script>
+  document.getElementById("resetForm").addEventListener("submit", function(event) {
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+    const confirmInput = document.getElementById("confirmPassword");
+    
+    if (password !== confirmPassword) {
+      confirmInput.setCustomValidity("Passwords do not match");
+      document.getElementById("confirmFeedback").innerText = "Passwords do not match.";
+      confirmInput.classList.add("is-invalid");
+      event.preventDefault();
+      event.stopPropagation();
+    } else {
+      confirmInput.setCustomValidity("");
+      confirmInput.classList.remove("is-invalid");
+    }
+  });
+
+  document.querySelectorAll(".toggle-password").forEach(button => {
+    button.addEventListener("click", () => {
+      const targetId = button.getAttribute("data-target");
+      const targetInput = document.getElementById(targetId);
+      const icon = button.querySelector("i");
+      
+      if (targetInput.type === "password") {
+        targetInput.type = "text";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+      } else {
+        targetInput.type = "password";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+      }
+    });
+  });
+</script>

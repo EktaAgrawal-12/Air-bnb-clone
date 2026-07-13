@@ -20,8 +20,10 @@ const User = require("./models/user.js");
 const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
+const hostRouter = require("./routes/host.js");
+const adminRouter = require("./routes/admin.js");
 
-// const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
+
 const dbUrl = process.env.ATLASDB_URL;
 
 main()
@@ -39,6 +41,7 @@ async function main() {
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(methodOverride("_method"));
 app.engine('ejs', ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
@@ -87,6 +90,8 @@ app.use((req, res, next)=>{
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
+app.use("/host", hostRouter);
+app.use("/admin", adminRouter);
 
 //error handler
 app.all("*splat", (req, res, next) => {
@@ -102,4 +107,4 @@ const port = process.env.PORT || 8080;
 app.listen(port, () => {
   console.log(`server is listening to port ${port}`);
 });
-// Trigger nodemon restart for route mapping update
+

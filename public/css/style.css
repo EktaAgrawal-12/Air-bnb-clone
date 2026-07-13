@@ -375,11 +375,20 @@ body {
   border-radius: 4px;
 }
 
-.badge-role-user {
+.badge-role-host {
   background-color: rgba(33, 150, 243, 0.15) !important;
   color: #2196f3 !important;
   font-weight: 700;
   border: 1px solid #2196f3;
+  padding: 0.35rem 0.6rem;
+  border-radius: 4px;
+}
+
+.badge-role-customer {
+  background-color: rgba(76, 175, 80, 0.15) !important;
+  color: #4caf50 !important;
+  font-weight: 700;
+  border: 1px solid #4caf50;
   padding: 0.35rem 0.6rem;
   border-radius: 4px;
 }
@@ -447,4 +456,439 @@ body {
   object-fit: cover;
   width: 100%;
   border-radius: var(--border-radius-md) !important;
+}
+
+/* ===== Glassmorphism Auth Pages ===== */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-page::before {
+  content: '';
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+  top: -100px;
+  right: -100px;
+  animation: float 8s ease-in-out infinite;
+}
+
+.auth-page::after {
+  content: '';
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+  bottom: -80px;
+  left: -80px;
+  animation: float 10s ease-in-out infinite reverse;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-30px) rotate(5deg); }
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+  padding: 2.5rem;
+  color: #fff;
+  position: relative;
+  z-index: 1;
+}
+
+.glass-card .form-control {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #fff;
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.glass-card .form-control::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.glass-card .form-control:focus {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.glass-card .form-label {
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.3px;
+}
+
+.glass-card .invalid-feedback {
+  color: #ffcdd2;
+}
+
+.glass-card a {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.glass-card a:hover {
+  color: #fff;
+}
+
+/* Glassmorphism Buttons */
+.btn-airbnb {
+  background-color: #FF385C !important;
+  color: #fff !important;
+  font-weight: 700;
+  border: none !important;
+  border-radius: 50px !important;
+  padding: 0.8rem 2rem !important;
+  font-size: 1rem;
+  letter-spacing: 0.3px;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 15px rgba(255, 56, 92, 0.3);
+}
+
+.btn-airbnb:hover {
+  background-color: #e0293f !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 56, 92, 0.4);
+}
+
+.btn-airbnb:active {
+  transform: translateY(0);
+}
+
+.btn-glass {
+  background: transparent !important;
+  color: #fff !important;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.4) !important;
+  border-radius: 50px !important;
+  padding: 0.7rem 1.5rem !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all 0.3s ease !important;
+}
+
+.btn-glass:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-color: rgba(255, 255, 255, 0.6) !important;
+  transform: translateY(-1px);
+}
+
+/* Toggle button inside glass forms */
+.glass-card .btn-outline-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.glass-card .btn-outline-secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff !important;
+}
+
+/* Role Selection Cards */
+.role-select-container {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  align-items: stretch;
+  flex-wrap: wrap;
+  max-width: 800px;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.role-card {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+  padding: 2.5rem 2rem;
+  color: #fff;
+  text-align: center;
+  text-decoration: none !important;
+  flex: 1;
+  min-width: 280px;
+  max-width: 360px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.role-card:hover {
+  transform: scale(1.03);
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.45);
+  box-shadow: 0 12px 40px rgba(31, 38, 135, 0.3);
+  color: #fff;
+}
+
+.role-card .role-icon {
+  font-size: 3.5rem;
+  margin-bottom: 0.5rem;
+  opacity: 0.9;
+  transition: transform 0.3s ease;
+}
+
+.role-card:hover .role-icon {
+  transform: translateY(-5px);
+}
+
+.role-card .role-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.role-card .role-subtext {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+}
+
+.role-card .role-arrow {
+  margin-top: auto;
+  font-size: 1.2rem;
+  opacity: 0;
+  transition: all 0.3s ease;
+  transform: translateX(-10px);
+}
+
+.role-card:hover .role-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+@media (max-width: 768px) {
+  .role-select-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  .role-card {
+    max-width: 100%;
+    width: 100%;
+  }
+  .glass-card {
+    padding: 1.5rem;
+  }
+}
+
+/* Role badge on signup form */
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50px;
+  padding: 0.4rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 1.5rem;
+}
+
+.role-badge i {
+  font-size: 0.9rem;
+}
+
+/* Auth page headings */
+.auth-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 0.3rem;
+}
+
+.auth-subtitle {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.65);
+  margin-bottom: 1.5rem;
+}
+
+/* Glass flash messages on auth pages */
+.auth-page .alert {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  border-radius: 12px;
+}
+
+.auth-page .alert-success {
+  border-left: 4px solid #4caf50;
+}
+
+.auth-page .alert-danger {
+  border-left: 4px solid #ff5252;
+}
+
+/* ===== Admin Dashboard Glassmorphism ===== */
+.admin-glass-stat {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 1.5rem;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.3s ease;
+}
+
+.admin-glass-stat:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.admin-glass-stat i {
+  font-size: 2.5rem;
+  opacity: 0.4;
+}
+
+.admin-glass-stat .stat-value {
+  font-size: 2rem;
+  font-weight: 800;
+  margin: 0.2rem 0;
+}
+
+.admin-glass-stat .stat-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.7;
+}
+
+.admin-glass-stat.purple {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.admin-glass-stat.blue {
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+}
+
+.admin-glass-stat.green {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+}
+
+.admin-glass-stat.coral {
+  background: linear-gradient(135deg, #FF385C 0%, #ff6b81 100%);
+}
+
+/* Admin glass table */
+.glass-table-wrapper {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.glass-table {
+  color: #fff !important;
+  margin: 0;
+  background: transparent !important;
+}
+
+.glass-table thead th {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: rgba(255, 255, 255, 0.85) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  padding: 1rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.glass-table tbody tr {
+  transition: background 0.2s ease;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+  background: transparent !important;
+}
+
+.glass-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.glass-table tbody td {
+  padding: 0.85rem 1rem;
+  vertical-align: middle;
+  color: rgba(255, 255, 255, 0.9) !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+.glass-table a {
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+}
+
+.glass-table a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* Admin page wrapper */
+.admin-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  padding: 2rem 0;
+  color: #fff;
+}
+
+.admin-page .container {
+  color: #fff;
+}
+
+/* Tab navigation glass style */
+.glass-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.glass-tab {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 0.6rem 1.5rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.glass-tab:hover, .glass-tab.active {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.35);
 }

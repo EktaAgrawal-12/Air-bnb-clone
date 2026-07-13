@@ -4,7 +4,7 @@ const Listing = require("../models/listing.js");
 async function geocodeLocation(location) {
   const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(location)}&format=json&limit=1`;
   const res = await fetch(url, {
-    headers: { 'User-Agent': 'WanderLust-App/1.0' }
+    headers: { 'User-Agent': 'Nestora-App/1.0' }
   });
   const data = await res.json();
   if (data.length > 0) {
@@ -118,7 +118,8 @@ module.exports.destroylisting = async (req, res) => {
   let deletedListing = await Listing.findByIdAndDelete(id);
   console.log(deletedListing);
   req.flash("success", "Listing Deleted");
-  res.redirect("/listings");
+  const redirectUrl = req.get('Referrer') || "/listings";
+  res.redirect(redirectUrl);
 };
 
 module.exports.showGallery = async (req, res) => {

@@ -1,0 +1,45 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="auth-page">
+  <!-- Flash Messages -->
+  <div style="position: fixed; top: 1.5rem; left: 50%; transform: translateX(-50%); z-index: 100; width: 90%; max-width: 500px;">
+    <% if (typeof success !== 'undefined' && success && success.length) { %>
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <%= success %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <% } %>
+    <% if (typeof error !== 'undefined' && error && error.length) { %>
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <%= error %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <% } %>
+  </div>
+
+  <div style="text-align: center; position: relative; z-index: 1; width: 100%;">
+    <h1 class="auth-title" style="font-size: 2.2rem; margin-bottom: 0.5rem;">Join Nestora</h1>
+    <p class="auth-subtitle" style="margin-bottom: 2.5rem;">How would you like to get started?</p>
+
+    <div class="role-select-container" style="margin: 0 auto;">
+      <a href="/signup?role=customer" class="role-card" id="customer-card">
+        <i class="fa-solid fa-suitcase-rolling role-icon"></i>
+        <h3 class="role-title">I'm a Customer</h3>
+        <p class="role-subtext">Explore stays and book your next trip</p>
+        <span class="role-arrow"><i class="fa-solid fa-arrow-right"></i> Get Started</span>
+      </a>
+
+      <a href="/signup?role=host" class="role-card" id="host-card">
+        <i class="fa-solid fa-house-chimney role-icon"></i>
+        <h3 class="role-title">I'm a Host</h3>
+        <p class="role-subtext">List your property and start earning</p>
+        <span class="role-arrow"><i class="fa-solid fa-arrow-right"></i> Get Started</span>
+      </a>
+    </div>
+
+    <div style="margin-top: 2rem; position: relative; z-index: 1;">
+      <span style="color: rgba(255,255,255,0.6);">Already have an account?</span>
+      <a href="/login" class="btn btn-glass btn-sm ms-2">Login</a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,116 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="admin-page">
+  <div class="container">
+    <!-- Flash Messages -->
+    <% if (typeof success !== 'undefined' && success && success.length) { %>
+      <div class="alert alert-success alert-dismissible fade show" role="alert" style="background: rgba(76,175,80,0.2); border: 1px solid rgba(76,175,80,0.4); color: #fff; border-radius: 12px;">
+        <%= success %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <% } %>
+    <% if (typeof error !== 'undefined' && error && error.length) { %>
+      <div class="alert alert-danger alert-dismissible fade show" role="alert" style="background: rgba(255,82,82,0.2); border: 1px solid rgba(255,82,82,0.4); color: #fff; border-radius: 12px;">
+        <%= error %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <% } %>
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <a href="/admin/dashboard" style="color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.9rem;">
+          <i class="fa-solid fa-arrow-left me-1"></i> Back to Dashboard
+        </a>
+        <h2 style="font-weight: 800; margin-top: 0.5rem;"><i class="fa-solid fa-user me-2"></i> User Details</h2>
+      </div>
+    </div>
+
+    <!-- User Info Card -->
+    <div class="row mb-4">
+      <div class="col-12 col-md-8 offset-md-2">
+        <div style="background: rgba(255,255,255,0.08); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 2rem;">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #667eea, #764ba2); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800;">
+              <%= targetUser.username.charAt(0).toUpperCase() %>
+            </div>
+            <div>
+              <h4 style="margin: 0; font-weight: 700;"><%= targetUser.username %></h4>
+              <p style="margin: 0; color: rgba(255,255,255,0.6);"><%= targetUser.email %></p>
+            </div>
+            <div class="ms-auto">
+              <% if (targetUser.role === 'host') { %>
+                <span class="badge" style="background: rgba(33,150,243,0.2); color: #64b5f6; border: 1px solid rgba(33,150,243,0.4); padding: 0.4rem 0.8rem; border-radius: 8px; font-weight: 600;">
+                  <i class="fa-solid fa-house-chimney me-1"></i> Host
+                </span>
+              <% } else if (targetUser.role === 'customer') { %>
+                <span class="badge" style="background: rgba(76,175,80,0.2); color: #81c784; border: 1px solid rgba(76,175,80,0.4); padding: 0.4rem 0.8rem; border-radius: 8px; font-weight: 600;">
+                  <i class="fa-solid fa-suitcase-rolling me-1"></i> Customer
+                </span>
+              <% } else { %>
+                <span class="badge" style="background: rgba(255,56,92,0.2); color: #ff6b81; border: 1px solid rgba(255,56,92,0.4); padding: 0.4rem 0.8rem; border-radius: 8px; font-weight: 600;">
+                  <i class="fa-solid fa-shield-halved me-1"></i> Admin
+                </span>
+              <% } %>
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-6">
+              <p style="color: rgba(255,255,255,0.5); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.3rem;">Role</p>
+              <p style="font-weight: 600;"><%= targetUser.role.charAt(0).toUpperCase() + targetUser.role.slice(1) %></p>
+            </div>
+            <div class="col-6">
+              <p style="color: rgba(255,255,255,0.5); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.3rem;">Joined</p>
+              <p style="font-weight: 600;"><%= targetUser._id.getTimestamp().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' }) %></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Host/Admin Listings -->
+    <% if ((targetUser.role === 'host' || targetUser.role === 'admin') && listings.length > 0) { %>
+      <div class="row">
+        <div class="col-12 col-md-8 offset-md-2">
+          <h5 style="font-weight: 700; margin-bottom: 1rem;">
+            <i class="fa-solid fa-hotel me-2" style="color: #FF385C;"></i> Their Listings (<%= listings.length %>)
+          </h5>
+          <div class="glass-table-wrapper">
+            <table class="table glass-table">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Location</th>
+                  <th>Price</th>
+                  <th class="text-center">View</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% listings.forEach(list => { %>
+                  <tr>
+                    <td><strong><%= list.title %></strong></td>
+                    <td><%= list.location %>, <%= list.country %></td>
+                    <td>&#8377; <%= list.price ? list.price.toLocaleString("en-IN") : "N/A" %></td>
+                    <td class="text-center">
+                      <a href="/listings/<%= list._id %>" class="btn btn-glass btn-sm py-1 px-3" style="font-size: 0.8rem;">
+                        <i class="fa-solid fa-external-link me-1"></i> Open
+                      </a>
+                    </td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    <% } else if (targetUser.role === 'host' || targetUser.role === 'admin') { %>
+      <div class="row">
+        <div class="col-12 col-md-8 offset-md-2">
+          <p style="color: rgba(255,255,255,0.5); text-align: center;">This user has no listings yet.</p>
+        </div>
+      </div>
+    <% } %>
+
+  </div>
+</div>

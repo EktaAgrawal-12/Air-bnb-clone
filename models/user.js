@@ -9,9 +9,11 @@ const userSchema = new Schema({
     },
     role: {
         type: String,
-        enum: ["user", "admin"],
-        default: "user",
+        enum: ["customer", "host", "admin"],
+        default: "customer",
     },
+    resetPasswordToken: String,
+    resetPasswordExpires: Date,
 });
 
 userSchema.plugin(passportLocalMongoose);

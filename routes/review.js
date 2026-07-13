@@ -1,7 +1,6 @@
 const express = require("express");
-const router = express.Router({mergeParams: true}); //if we need some parameters which are in parent route that like in this  /listings/:id/reviews here id is can be used so we use mergeParams:true
+const router = express.Router({mergeParams: true}); 
 const wrapAsync = require("../utils/wrapAsync.js");
-const ExpressError = require("../utils/ExpressError.js");
 const Review = require("../models/review.js");
 const Listing = require("../models/listing.js");
 const {validateReview, isLoggedIn, isReviewAuthor} = require("../middleware.js")

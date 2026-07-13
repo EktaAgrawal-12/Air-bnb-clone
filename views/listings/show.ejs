@@ -66,8 +66,8 @@
             </div>
           </div>
 
-          <!-- Listing Admin / Owner Actions (Seed admin permissions granted to standard users) -->
-          <% if(currUser && (currUser._id.equals(listing.owner._id) || currUser.role === 'admin' || listing.owner.username === 'admin')) {%>
+          <!-- Listing Owner Actions -->
+          <% if(currUser && currUser._id.equals(listing.owner._id)) {%>
             <div class="d-flex gap-2">
               <a href="/listings/<%= listing._id %>/edit" class="btn btn-secondary-action flex-grow-1 text-center">Edit Listing</a>
               <form method="POST" action="/listings/<%=listing._id%>?_method=DELETE" class="flex-grow-1">
