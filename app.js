@@ -93,6 +93,10 @@ app.use("/", userRouter);
 app.use("/host", hostRouter);
 app.use("/admin", adminRouter);
 
+app.get("/", (req, res) => {
+  res.redirect("/listings");
+});
+
 //error handler
 app.all("*splat", (req, res, next) => {
   next(new ExpressError(404, "Page not found!"));
